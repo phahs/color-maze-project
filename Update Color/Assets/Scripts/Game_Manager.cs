@@ -5,12 +5,13 @@ public class Game_Manager : MonoBehaviour
 {
     public Map mapPrefab;
     public Canvas mainMenu;
+    public Canvas playerUI;
     public InputField testLevel;
-
+    
     private bool gameStart;
     private int level;
     private Map mapInstance;
-
+    
     void Start()
     {
         level = 1;
@@ -65,6 +66,7 @@ public class Game_Manager : MonoBehaviour
     {
         gameStart = false;
         Destroy(mapInstance.gameObject);
+        playerUI.gameObject.SetActive(false);
         mainMenu.gameObject.SetActive(true);
     }
 

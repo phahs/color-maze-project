@@ -28,6 +28,7 @@ public class Map : MonoBehaviour
 
         createRooms(totalNumRooms);
         // Populate map
+        tempPlacePlayer();
     }
 
     private void orderObjects()
@@ -158,7 +159,6 @@ public class Map : MonoBehaviour
         newTile.transform.parent = room.transform;
         newTile.transform.localPosition = new Vector3(coord.x - sizeX * 0.5f + 0.5f, 0f, coord.z - sizeZ * 0.5f + 0.5f);
         newTile.tileType = 1;
-
     }
 
     private Coordinates chooseNextTile(Coordinates addCoord, Room room)
@@ -273,6 +273,8 @@ public class Map : MonoBehaviour
     
     private void roomPort(Map_Tile tile)
     {
+        Renderer rend = tile.GetComponentInChildren<Renderer>();
+        rend.material.color = Color.red;
         Teleporter newTeleporter = Instantiate(teleporterPrefab) as Teleporter;
         newTeleporter.transform.parent = portList.transform;
         newTeleporter.transform.position = tile.transform.position;
@@ -298,6 +300,8 @@ public class Map : MonoBehaviour
             roomChoices[rand] = roomChoices[i];
             rand = Random.Range(1, tiles.Length - 1);
             ports[portIndex].setDestination(tiles[rand]);
+            Renderer rend = tiles[rand].GetComponentInChildren<Renderer>();
+            rend.material.color = Color.blue;
         }
 
         for(int w = 0; w < ports.Length; w++)
@@ -308,7 +312,21 @@ public class Map : MonoBehaviour
                 Map_Tile[] tiles = rooms[rand].GetComponentsInChildren<Map_Tile>();
                 rand = Random.Range(1, tiles.Length - 1);
                 ports[w].setDestination(tiles[rand]);
+                Renderer rend = tiles[rand].GetComponentInChildren<Renderer>();
+                rend.material.color = Color.black;
             }
         }
+    }
+
+    private void tempPlacePlayer()
+    {
+        Room[] rooms = roomList.GetComponentsInChildren<Room>();
+        int rand = Random.Range(0, rooms.Length);
+        Map_Tile[] tiles = rooms[rand].GetComponentsInChildren<Map_Tile>();
+        rand = Random.Range(1, tiles.Length - 1);
+        Player pc = Instantiate(playerPrefab) as Player;
+        pc.transform.position = tiles[rand].transform.position;
+        pc.transform.position += new Vector3(0, 0.5f, 0);
+        pc.name = "Player";
     }
 }
