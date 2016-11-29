@@ -3,25 +3,41 @@ using System.Collections;
 
 public class Teleporter : MonoBehaviour
 {
-    public Coordinates destination;
+    public Map_Tile destination;
     public Vector2 dest;
+    public Canvas playerUI;
+
+    void Start()
+    {
+        
+    }
 
     public void OnTriggerEnter(Collider other)
     {
-        // screen flash to color of level
-        // do the teleport while screen is the color
+        if(other.tag == "Player")
+        {
+            //turn screen white + color of level
+            Time.timeScale = 0;
+            other.transform.position = new Vector3(destination.transform.position.x, 0, destination.transform.position.z);
+            Time.timeScale = 1;
+        }
+        else
+        {
+            // local flash at both teleporter location and destination?
+            other.transform.position = new Vector3(destination.transform.position.x, 0, destination.transform.position.z);
+        }
        
     }
 
-    public Coordinates getDestination()
+    public Map_Tile getDestination()
     {
         return destination;
     }
 
     public void setDestination(Map_Tile tile)
     {
-        destination = tile.coord;
-        dest.x = tile.coord.x;
-        dest.y = tile.coord.z;
+        destination = tile;
+        dest.x = tile.transform.position.x;
+        dest.y = tile.transform.position.z;
     }
 }
