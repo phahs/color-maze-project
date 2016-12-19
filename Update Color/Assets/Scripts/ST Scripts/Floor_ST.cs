@@ -13,9 +13,15 @@ public class Floor_ST : Tile_ST
 
     }
 
-    public void addSurroundings(Tile_ST[,] originalMap, int x, int z, Tile_ST wallPrefab, GameObject wallList)
+    public void setIndex(int x, int z)
     {
-        Tile_ST[] adjTiles = sweep(originalMap, x, z, wallPrefab, wallList);
+        mapIndex = new Vector3(x, 0, z);
+    }
+
+    public void addSurroundings(Tile_ST[,] originalMap, int x, int z, Tile_ST wallPrefab, Room_ST room)
+    {
+        mapIndex = new Vector3(x, 0, z);
+        Tile_ST[] adjTiles = sweep(originalMap, x, z, wallPrefab, room);
 
         for (int k = 0; k < surroundings.Length; k++)
         {
@@ -36,19 +42,19 @@ public class Floor_ST : Tile_ST
         surroundings[index] = other;
     }
 
-    private Tile_ST[] sweep(Tile_ST[,] oMap, int x, int z, Tile_ST wallPrefab, GameObject wallList)
+    private Tile_ST[] sweep(Tile_ST[,] oMap, int x, int z, Tile_ST wallPrefab, Room_ST room)
     {
         Tile_ST[] nearTiles = new Tile_ST[8];
 
         for (int i = 0; i < nearTiles.Length; i++)
         {
-            nearTiles[i] = findTile(oMap, x, z, i, wallPrefab, wallList);
+            nearTiles[i] = findTile(oMap, x, z, i, wallPrefab, room);
         }
 
         return nearTiles;
     }
 
-    private Tile_ST findTile(Tile_ST[,] tempMap, int x, int z, int index, Tile_ST wallPrefab, GameObject wallList)
+    private Tile_ST findTile(Tile_ST[,] tempMap, int x, int z, int index, Tile_ST wallPrefab, Room_ST room)
     {
         Tile_ST aTile = null;
         int tempx = 0;
@@ -104,7 +110,7 @@ public class Floor_ST : Tile_ST
             aTile = Instantiate(wallPrefab) as Wall_ST;
             tempMap[tempx, tempz] = aTile;
             aTile.name = "Wall " + tempx + ", " + tempz;
-            aTile.transform.parent = wallList.transform;
+            aTile.transform.parent = room.transform;
             aTile.transform.localPosition = new Vector3(tempx - size * 0.5f + 0.5f, 0, tempz - size * 0.5f + 0.5f);
         }
 
